@@ -29,16 +29,25 @@ def insert2(nickname: str,
         """, (nickname, user_name, chat_id, user_id, dtime, is_winner))
 
 
-def select_lucky(moderator_id):
+def select_lucky(moderator_id: int):
+
     with sqlite3.connect(( DB )) as conn:
         cursor = conn.cursor()
-        # print(moderator_id, 's')
         cursor.execute(f"""SELECT chat_name, user_name, nickname, congr_number, dtime_connetion, is_winner
                            FROM 'users' JOIN 'groups_relation'
                            ON chat_id = group_id AND moderator_id = abs({moderator_id});""")
-        # print(moderator_id, 'select2')
     result = cursor.fetchall()
-    # prin(r)
+    return result
+
+
+def select_last_uncongratulate(moderator_id: int):
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"""SELECT chat_name, user_name, nickname, congr_number, dtime_connetion
+                           FROM 'users' JOIN 'groups_relation'
+                           ON chat_id = group_id AND moderator_id = abs({moderator_id}) AND is_winner = 0
+                           ORDER BY chat_name;""")
+    result = cursor.fetchall()
     return result
 
 
