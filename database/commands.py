@@ -43,13 +43,23 @@ def select_lucky(moderator_id: int):
 def select_last_uncongratulate(moderator_id: int):
     with sqlite3.connect((DB)) as conn:
         cursor = conn.cursor()
-        cursor.execute(f"""SELECT chat_name, user_name, nickname, congr_number, dtime_connetion
+        cursor.execute(f"""SELECT chat_id, congr_number
                            FROM 'users' JOIN 'groups_relation'
                            ON chat_id = group_id AND moderator_id = abs({moderator_id}) AND is_winner = 0
-                           ORDER BY chat_name;""")
+                           ORDER BY chat_id, congr_number;""")
     result = cursor.fetchall()
     return result
 
+
+def select_group_id(moderator_id: int):
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"""SELECT chat_id, COUNT(*)
+                           FROM 'users' JOIN 'groups_relation'
+                           ON chat_id = group_id AND moderator_id = abs({moderator_id}) AND is_winner = 0
+                           GROUP BY chat_id;""")
+    result = cursor.fetchall()
+    return result
 
 def winner_check(id):
     with sqlite3.connect(( DB )) as conn:
