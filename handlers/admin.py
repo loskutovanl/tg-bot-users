@@ -25,6 +25,16 @@ def bot_admin_show(message: Message) -> None:
                 bot_text = f"{bot_text}{j_info[1]} "
             bot.send_message(chat_id=message.chat.id, text=bot_text)
 
+    if str(message.from_user.id) in ADMIN_IDS:
+        bot.send_message(chat_id=message.chat.id,
+                         text="Пожалуйста, подтвердите, что вы действительно хотите поменять настройки админки. "
+                              "Это приведет к полному удалению текущих настроек и отменить это действие будет "
+                              "невозможно!",
+                         reply_markup=admin_keyboard.yes_no_proceed_keyboard())
+    elif abs(message.chat.id) in moderator_ids:
+        bot.send_message(chat_id=message.chat.id,
+                         text=f"Ошибка доступа: эта команда доступна только пользователям с правами "
+                              f"администрирования. Доступ есть у пользователей с такими user_id:\n{ADMIN_IDS}")
 
 @bot.message_handler(commands=['adminsetup'])
 def bot_admin_setup(message: Message) -> None:
