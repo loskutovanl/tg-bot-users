@@ -64,7 +64,7 @@ def select_group_id(moderator_id: int):
 def winner_check(id):
     with sqlite3.connect(( DB )) as conn:
         cursor = conn.cursor()
-        cursor.execute(f"SELECT is_winner FROM users WHERE is_winner={id}")
+        cursor.execute(f"SELECT * FROM users WHERE user_id={id} AND is_winner=1")
         result = cursor.fetchall()
         return result
 
@@ -128,3 +128,48 @@ def get_moderator_id() -> List[int]:
         for moderator_id in moderator_id_list:
             result.append(moderator_id[0])
         return result
+
+def select_id_from_users(user_id) -> None:
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT id FROM 'users' WHERE user_id={user_id}")
+        record_id = cursor.fetchall()
+        return record_id[-1][0]
+
+
+
+def temp_save(
+            chat_id: int,
+            record_id: int,
+            bot_message_id: int
+            ) -> None:
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+        INSERT INTO 'temp_storage' (chat_id, record_id, bot_message_id) VALUES (?, ?, ?);
+        """, (chat_id, record_id, bot_message_id))
+
+
+
+def buttons_remover(
+        chat_id: int,
+        ) -> None:
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT bot_message_id FROM 'temp_storage' WHERE chat_id={chat_id}")
+        result = cursor.fetchall()
+        delete_list = []
+        for i in result:
+            delete_list.extend(i)
+        return delete_list
+
+
+def storage_cleaner(
+        chat_id: int,
+        ) -> None:
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(f'''DELETE FROM 'temp_storage' WHERE chat_id={chat_id};''')
+
+
+
