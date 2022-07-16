@@ -12,7 +12,7 @@ def insert(nickname: str, user_name: str, chat_name: str, user_number: int, dtim
     with sqlite3.connect((DB)) as conn:
         cursor = conn.cursor()
         cursor.execute("""
-        INSERT INTO 'users' (nickname, user_name, chat_name, user_number, dtime_connetion) VALUES (?, ?, ?, ?,?);
+        INSERT INTO 'users' (nickname, user_name, chat_name, congr_number, dtime_connetion) VALUES (?, ?, ?, ?,?);
         """, (nickname, user_name, chat_name, user_number, dtime))
 
 
@@ -48,7 +48,7 @@ def select_lucky(moderator_id: int):
 def select_last_uncongratulate(moderator_id: int):
     with sqlite3.connect((DB)) as conn:
         cursor = conn.cursor()
-        cursor.execute(f"""SELECT chat_id, congr_number
+        cursor.execute(f"""SELECT chat_id, congr_number, nickname, user_name, chat_name, dtime_connetion, id
                            FROM 'users' JOIN 'groups_relation'
                            ON chat_id = group_id AND moderator_id = abs({moderator_id}) AND is_winner = 0
                            ORDER BY chat_id, congr_number;""")
@@ -182,8 +182,8 @@ def is_winner_id_select(
         ) -> None:
     with sqlite3.connect((DB)) as conn:
         cursor = conn.cursor()
-        result = cursor.execute(f'''SELECT users.id FROM users Join temp_storage ON users.id=temp_storage.record_id
-                        WHERE temp_storage.bot_message_id={bot_message_id};''')
+        result = cursor.execute(f'''SELECT id FROM users Join temp_storage ON id=record_id
+                        WHERE bot_message_id={bot_message_id};''')
         id = []
         for i in result:
             id.append(i)
