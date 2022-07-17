@@ -29,7 +29,7 @@ def bot_uncongratulate(message: Message):
                               f'(@{unceleb[2]})\n\U0001F522  {unceleb[1]}  \U0001F550 	{dtime}',
                          reply_markup=markup)
         # print(unceleb[6])
-        usersbase.temp_save(chat_id=message.chat.id,
+        usersbase.temp_save(chat_id=unceleb[0],
                   record_id=unceleb[6],
                   bot_message_id=bot_message.id)
 
@@ -38,14 +38,17 @@ def bot_uncongratulate(message: Message):
 def callback(call):
     if call.message:
         if call.data == 'congr':
+            winner_chat_id = usersbase.get_chat_id(bot_message_id=call.message.message_id)
+
             winner = usersbase.is_winner_id_select(bot_message_id=call.message.message_id)
             # print(winner)
             usersbase.is_winner_record(winner_id=winner)
-            remove_list = usersbase.buttons_remover(chat_id=call.message.chat.id)
+            remove_list = usersbase.buttons_remover(chat_id=winner_chat_id)
             for message in remove_list:
                 bot.delete_message(chat_id=call.message.chat.id, message_id=message)
             usersbase.storage_cleaner(chat_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, f'Поздравили и добавили в базу.')
         else:
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+            usersbase.record_cleaner(bot_message_id=call.message.message_id)
             bot.send_message(call.message.chat.id, 'Ничего не делали, так как не победитель')
