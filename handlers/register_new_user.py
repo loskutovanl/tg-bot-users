@@ -43,7 +43,7 @@ def handler_new_member(message):
 
             temp_save(chat_id=258281993,
                       record_id=select_id_from_users(user_id=message.from_user.id),
-                      bot_message_id=bot_message.id
+                      bot_message_id=bot_message.id, users_chat=message.chat.id
                       )
 
 
@@ -60,9 +60,9 @@ def callback(call):
             name = data_finder(bot_message_id=call.message.message_id)[0][0]
             congr_number = data_finder(bot_message_id=call.message.message_id)[0][1]
             users_chat = data_finder(bot_message_id=call.message.message_id)[0][2]
-            print(name, congr_number, users_chat)
 
-            remove_list = buttons_remover(chat_id=call.message.chat.id)
+
+            remove_list = buttons_remover(chat_id=users_chat)
             for message in remove_list:
                 bot.delete_message(chat_id=call.message.chat.id, message_id=message)
 

@@ -127,13 +127,14 @@ def select_id_from_users(user_id) -> None:
 def temp_save(
             chat_id: int,
             record_id: int,
-            bot_message_id: int
+            bot_message_id: int,
+            users_chat: int
             ) -> None:
     with sqlite3.connect((DB)) as conn:
         cursor = conn.cursor()
         cursor.execute("""
-        INSERT INTO 'temp_storage' (chat_id, record_id, bot_message_id) VALUES (?, ?, ?);
-        """, (chat_id, record_id, bot_message_id))
+        INSERT INTO 'temp_storage' (chat_id, record_id, bot_message_id, button_chat_id) VALUES (?, ?, ?, ?);
+        """, (users_chat, record_id, bot_message_id, chat_id,))
 
 
 
