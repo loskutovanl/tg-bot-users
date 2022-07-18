@@ -194,7 +194,19 @@ def other_lucky_check(
         for i in result:
             check_list.append(i)
 
-        print(check_list)
 
 
 
+
+def data_finder(
+    bot_message_id: int,
+    ) -> None:
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        result = cursor.execute(f'''SELECT users.user_name, users.congr_number, users.chat_id FROM users Join temp_storage ON users.id=temp_storage.record_id
+                        WHERE temp_storage.bot_message_id={bot_message_id};''')
+        data = []
+        for i in result:
+            data.append(i)
+
+        return data

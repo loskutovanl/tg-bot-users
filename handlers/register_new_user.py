@@ -2,7 +2,7 @@ from loader import bot
 from database.commands import insert, insert2
 import datetime
 from database.commands import winner_check, select_id_from_users,\
-    temp_save, buttons_remover, storage_cleaner, is_winner_id_select, is_winner_record, other_lucky_check
+    temp_save, buttons_remover, storage_cleaner, is_winner_id_select, is_winner_record, other_lucky_check, data_finder
 from telebot import types
 
 
@@ -36,12 +36,12 @@ def handler_new_member(message):
         if not other_lucky_check(count_users=502, chat_id=message.chat.id):
 
 
-            bot_message = bot.send_message(message.chat.id,
+            bot_message = bot.send_message(258281993,
                     f'В {chat_name} вступил юбилейный пользователь {nickname} {user_name}\n'
                     f'Порядковый номер вступления: {count}, время вступления: {dtime}',
                              reply_markup=markup)
 
-            temp_save(chat_id=message.chat.id,
+            temp_save(chat_id=258281993,
                       record_id=select_id_from_users(user_id=message.from_user.id),
                       bot_message_id=bot_message.id
                       )
@@ -57,14 +57,23 @@ def callback(call):
             winner = is_winner_id_select(bot_message_id=call.message.message_id)
             is_winner_record(winner_id=winner)
 
+            name = data_finder(bot_message_id=call.message.message_id)[0][0]
+            congr_number = data_finder(bot_message_id=call.message.message_id)[0][1]
+            users_chat = data_finder(bot_message_id=call.message.message_id)[0][2]
+            print(name, congr_number, users_chat)
+
             remove_list = buttons_remover(chat_id=call.message.chat.id)
             for message in remove_list:
                 bot.delete_message(chat_id=call.message.chat.id, message_id=message)
 
+
+
             storage_cleaner(chat_id=call.message.chat.id)
 
-            bot.send_message(call.message.chat.id, f'Поздравили и добавили в базу.')
+            bot.send_message(users_chat, f'Поздравляю, {name}, '
+                                        f'как же удачно попали в нужное время. Вы  '
+                                        f'участник {congr_number} коммьюнити. Вас ждут плюшки и печенюшки.')
 
         else:
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-            bot.send_message(call.message.chat.id, 'Ничего не делали, так как не победитель')
+            bot.send_message(call.message.chat.id, 'Что-то пошло не так')
