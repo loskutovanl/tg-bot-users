@@ -63,12 +63,14 @@ def callback(call):
 
 
             remove_list = buttons_remover(chat_id=users_chat)
+
+            print(remove_list)
             for message in remove_list:
                 bot.delete_message(chat_id=call.message.chat.id, message_id=message)
 
 
 
-            storage_cleaner(chat_id=call.message.chat.id)
+            storage_cleaner(chat_id=users_chat)
 
             bot.send_message(users_chat, f'Поздравляю, {name}, '
                                         f'как же удачно попали в нужное время. Вы  '
