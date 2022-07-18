@@ -16,6 +16,7 @@ def bot_uncongratulate(message: Message):
     uncelebs_list =[]
     for id, gr in enumerate(gr_id):
         temp_id += gr_id[id][1]
+
         uncelebs_list.append(uncelebs[temp_id - 1])
         if uncelebs[temp_id - 2][1]//500 == uncelebs[temp_id - 1][1]//500:
             uncelebs_list.append(uncelebs[temp_id - 2])
@@ -47,7 +48,8 @@ def callback(call):
             for message in remove_list:
                 bot.delete_message(chat_id=call.message.chat.id, message_id=message)
             usersbase.storage_cleaner(chat_id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, f'Поздравили и добавили в базу.')
+            celeb_name = call.message.text.split()
+            bot.send_message(call.message.chat.id, f'Поздравили {celeb_name[0]} {celeb_name[3]}!!!')
         else:
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             usersbase.record_cleaner(bot_message_id=call.message.message_id)
