@@ -2,7 +2,7 @@ from loader import bot
 from database.commands import insert, insert2
 import datetime
 from database.commands import winner_check, select_id_from_users,\
-    temp_save, buttons_remover, storage_cleaner, is_winner_id_select, is_winner_record
+    temp_save, buttons_remover, storage_cleaner, is_winner_id_select, is_winner_record, other_lucky_check
 from telebot import types
 
 
@@ -14,7 +14,6 @@ def handler_new_member(message):
     nickname = message.from_user.username
     user_name = message.from_user.first_name
     dtime = datetime.datetime.now()
-
 
 
 
@@ -34,19 +33,22 @@ def handler_new_member(message):
             chat_id=message.chat.id, is_winner=0)
 
 
-        bot_message = bot.send_message(message.chat.id,
-                f'В {chat_name} вступил юбилейный пользователь {nickname} {user_name}\n'
-                f'Порядковый номер вступления: {count}, время вступления: {dtime}',
-                         reply_markup=markup)
-
-        temp_save(chat_id=message.chat.id,
-                  record_id=select_id_from_users(user_id=message.from_user.id),
-                  bot_message_id=bot_message.id
-                  )
+        if not other_lucky_check(count_users=502, chat_id=message.chat.id):
 
 
-    # else:
-    #     bot.send_message(message.chat.id, f'Есть в списке победителей{winner_check(user_number)}')
+            bot_message = bot.send_message(message.chat.id,
+                    f'В {chat_name} вступил юбилейный пользователь {nickname} {user_name}\n'
+                    f'Порядковый номер вступления: {count}, время вступления: {dtime}',
+                             reply_markup=markup)
+
+            temp_save(chat_id=message.chat.id,
+                      record_id=select_id_from_users(user_id=message.from_user.id),
+                      bot_message_id=bot_message.id
+                      )
+
+
+    else:
+        bot.send_message(message.chat.id, f'Что-то пошло не так')
 
 @bot.callback_query_handler(func=lambda call: call.data == "grac" or call.data == "decline")
 def callback(call):

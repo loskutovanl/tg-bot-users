@@ -181,5 +181,20 @@ def is_winner_record(winner_id: int,
 
 
 
+def other_lucky_check(
+        count_users: int,
+        chat_id: int,
+        ) -> None:
+    lucky_number = count_users - count_users % 500
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        result = cursor.execute(f'''SELECT * FROM users WHERE chat_id={chat_id} AND
+        (congr_number BETWEEN {lucky_number} AND {lucky_number + 2}) AND is_winner=1;''')
+        check_list = []
+        for i in result:
+            check_list.append(i)
+
+        print(check_list)
+
 
 
