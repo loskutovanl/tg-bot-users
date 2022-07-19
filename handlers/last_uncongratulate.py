@@ -13,7 +13,7 @@ def bot_uncongratulate(message: Message):
     uncelebs = usersbase.select_last_uncongratulate(message.chat.id)
     gr_id = usersbase.select_group_id(message.chat.id)
     temp_id = 0
-    uncelebs_list =[]
+    uncelebs_list = []
     for id, gr in enumerate(gr_id):
         temp_id += gr_id[id][1]
 
