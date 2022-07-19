@@ -115,13 +115,13 @@ def get_moderator_id() -> List[int]:
             result.append(moderator_id[0])
         return result
 
+
 def select_id_from_users(user_id) -> None:
     with sqlite3.connect((DB)) as conn:
         cursor = conn.cursor()
         cursor.execute(f"SELECT id FROM 'users' WHERE user_id={user_id}")
         record_id = cursor.fetchall()
         return record_id[-1][0]
-
 
 
 def temp_save(
@@ -135,7 +135,6 @@ def temp_save(
         cursor.execute("""
         INSERT INTO 'temp_storage' (chat_id, record_id, bot_message_id, button_chat_id) VALUES (?, ?, ?, ?);
         """, (users_chat, record_id, bot_message_id, chat_id,))
-
 
 
 def buttons_remover(
@@ -189,7 +188,6 @@ def is_winner_record(winner_id: int,
                         WHERE id={winner_id}''')
 
 
-
 def other_lucky_check(
         count_users: int,
         chat_id: int,
@@ -202,9 +200,6 @@ def other_lucky_check(
         check_list = []
         for i in result:
             check_list.append(i)
-
-
-
 
 
 def data_finder(

@@ -25,7 +25,8 @@ def handler_new_member(message):
     markup.add(congratulations, shame)
 
 
-    if not message.from_user.is_bot and not winner_check(user_number): # тут будет еще проверка count % 500 == 0
+    if not message.from_user.is_bot and not winner_check(user_number): #  and count % 500 == 0 or count % 500 == 1 or count % 500 == 2:
+                                                                        # в 28 строке спящий кусок кода, который нужно включить когда запустим бота
         insert2(
             nickname=message.from_user.username, user_name=message.from_user.first_name,
             congr_number=count, chat_name=message.chat.title,
