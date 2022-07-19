@@ -179,9 +179,6 @@ def get_chat_id(bot_message_id):
         cursor = conn.cursor()
         cursor.execute(f"SELECT chat_id FROM 'temp_storage' WHERE bot_message_id={bot_message_id}")
         result = cursor.fetchall()
-        print(result, 'result')
-        print(result[0], 'result[0]')
-        print(result[0][0], 'result[0][0]')
         return result[0][0]
 
 
