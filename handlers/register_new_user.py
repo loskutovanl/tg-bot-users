@@ -26,8 +26,6 @@ def handler_new_member(message):
 
 
     if not message.from_user.is_bot and not winner_check(user_number): # тут будет еще проверка count % 500 == 0
-
-
         insert2(
             nickname=message.from_user.username, user_name=message.from_user.first_name,
             congr_number=count, chat_name=message.chat.title,
@@ -51,6 +49,7 @@ def handler_new_member(message):
 
     else:
         bot.send_message(message.chat.id, f'Что-то пошло не так')
+
 
 @bot.callback_query_handler(func=lambda call: call.data == "grac" or call.data == "decline")
 def callback(call):
@@ -76,6 +75,7 @@ def callback(call):
                                         f'участник {congr_number} коммьюнити. Вас ждут плюшки и печенюшки.')
 
             bot.send_message(moders_chat, f'Участник {name} поздравлен.')
+
 
         else:
             bot.delete_message(chat_id=moders_chat, message_id=call.message.message_id)
