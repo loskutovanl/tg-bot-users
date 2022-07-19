@@ -49,7 +49,7 @@ def handler_new_member(message):
 
 
     else:
-        bot.send_message(message.chat.id, f'Что-то пошло не так')
+        bot.send_message(message.chat.id, f'Что-то пошло не так') #В активной версии нужно убрать, пока оставлено для проверки
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "grac" or call.data == "decline")
