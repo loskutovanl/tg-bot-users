@@ -159,6 +159,14 @@ def storage_cleaner(
         cursor.execute(f'''DELETE FROM 'temp_storage' WHERE chat_id={chat_id};''')
 
 
+def storage_cleaner_lite(
+        message_id: int,
+        ) -> None:
+    with sqlite3.connect((DB)) as conn:
+        cursor = conn.cursor()
+        cursor.execute(f'''DELETE FROM 'temp_storage' WHERE bot_message_id={message_id};''')
+
+
 def is_winner_id_select(
         bot_message_id: int,
         ) -> None:
