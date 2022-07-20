@@ -45,13 +45,13 @@ def select_lucky(moderator_id: int):
     result = cursor.fetchall()
     return result
 
-def select_lucky_id(id: int):
+def select_lucky_id(idd: int):
 
     with sqlite3.connect(( DB )) as conn:
         cursor = conn.cursor()
-        cursor.execute(f"""SELECT user_name
+        cursor.execute(f"""SELECT *
                            FROM 'users'
-                           WHERE chat_id = '0');""")
+                           WHERE chat_id = {idd};""")
     result = cursor.fetchall()
     return result
 

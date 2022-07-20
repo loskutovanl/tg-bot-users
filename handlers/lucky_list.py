@@ -56,7 +56,7 @@ def bot_lucky_list(message: Message):
     #                               f'(@{winner[2]})\n\U0001F522  {winner[3]}  \U0001F550 	{dtime}')
 
 @bot.callback_query_handler(func=lambda call: True)
-def callback(call):
+def callback(call, message: Message):
     luk = ['0', '123', '234']
 
 
@@ -64,6 +64,7 @@ def callback(call):
         for i in luk:
             if call.data == i:
                 winners = usersbase.select_lucky_id(i)
+                bot.send_message(chat_id=message.chat.id, text=f'{winners[1]}')
                 print(winners)
                 # print(i)
                 # return i
