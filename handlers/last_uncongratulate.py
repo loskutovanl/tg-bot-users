@@ -6,6 +6,7 @@ from telebot import types
 
 @bot.message_handler(commands=['unceleb'])
 def bot_uncongratulate(message: Message):
+    usersbase.temp_cleaner()
     markup = types.InlineKeyboardMarkup(row_width=1)
     congr = types.InlineKeyboardButton(text='Поздравить', callback_data='congr')
     uncongr = types.InlineKeyboardButton(text='Отклонить', callback_data='uncongr')
@@ -16,6 +17,7 @@ def bot_uncongratulate(message: Message):
     uncelebs_list = []
     for id, gr in enumerate(gr_id):
         temp_id += gr_id[id][1]
+        # print(uncelebs[temp_id - 1], uncelebs[temp_id - 2], uncelebs[temp_id - 3])
 
         uncelebs_list.append(uncelebs[temp_id - 1])
         if uncelebs[temp_id - 2][1]//500 == uncelebs[temp_id - 1][1]//500:
@@ -30,7 +32,7 @@ def bot_uncongratulate(message: Message):
                               f'(@{unceleb[2]})\n\U0001F522  {unceleb[1]}  \U0001F550 	{dtime}',
                          reply_markup=markup)
         # print(unceleb[6])
-        usersbase.temp_save(chat_id=unceleb[0],
+        usersbase.temp_save_unceleb(chat_id=unceleb[0],
                   record_id=unceleb[6],
                   bot_message_id=bot_message.id)
 
@@ -39,18 +41,18 @@ def bot_uncongratulate(message: Message):
 def callback(call):
     if call.message:
         if call.data == 'congr':
-            winner_chat_id = usersbase.get_chat_id(bot_message_id=call.message.message_id)
+            winner_chat_id = usersbase.get_chat_id_unceleb(bot_message_id=call.message.message_id)
 
-            winner = usersbase.is_winner_id_select(bot_message_id=call.message.message_id)
+            winner = usersbase.is_winner_id_select_unceleb(bot_message_id=call.message.message_id)
             # print(winner)
             usersbase.is_winner_record(winner_id=winner)
-            remove_list = usersbase.buttons_remover(chat_id=winner_chat_id)
+            remove_list = usersbase.buttons_remover_unceleb(chat_id=winner_chat_id)
             for message in remove_list:
                 bot.delete_message(chat_id=call.message.chat.id, message_id=message)
-            usersbase.storage_cleaner(chat_id=call.message.chat.id)
+            usersbase.storage_cleaner_unceleb(chat_id=call.message.chat.id)
             celeb_name = call.message.text.split()
             bot.send_message(call.message.chat.id, f'Поздравили {celeb_name[0]} {celeb_name[3]}!!!')
         else:
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-            usersbase.record_cleaner(bot_message_id=call.message.message_id)
-            bot.send_message(call.message.chat.id, 'Ничего не делали, так как не победитель')
+            usersbase.record_cleaner_unceleb(bot_message_id=call.message.message_id)
+            #bot.send_message(call.message.chat.id, 'Ничего не делали, так как не победитель')
